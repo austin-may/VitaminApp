@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	//will probably deprecate soon
 	database.SetupDatabase()
 	vitamin.SetupRoutes()
 	fmt.Println("Listening on port 3000")
