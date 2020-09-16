@@ -2,6 +2,7 @@ package vitamin
 
 import (
 	"VitaminApp/cors"
+	"VitaminApp/graph/model"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -20,7 +21,7 @@ func SetupRoutes() {
 func vitaminsHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		vitamins, err := getVitaminList()
+		vitamins, err := GetVitaminList()
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
@@ -34,7 +35,7 @@ func vitaminsHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(vitaminsJSON)
 	case http.MethodPost:
 		//declare a variable with the struct type
-		var newVitamin Vitamin
+		var newVitamin model.NewVitamin
 		//read in the json payload coming in from the outside world
 		vitaminBytes, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -49,7 +50,7 @@ func vitaminsHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		//call addVitamin
-		err = addVitamin(newVitamin)
+		err = AddVitamin(newVitamin)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
