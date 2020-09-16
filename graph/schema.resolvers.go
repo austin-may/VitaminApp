@@ -4,41 +4,24 @@ package graph
 // will be copied through when generating and any unknown code will be moved to the end.
 
 import (
-	"VitaminApp/database"
 	"VitaminApp/graph/generated"
 	"VitaminApp/graph/model"
+	"VitaminApp/vitamin"
 	"context"
-	"fmt"
-	"time"
 )
 
 func (r *mutationResolver) CreateVitamin(ctx context.Context, input model.NewVitamin) (*model.Vitamin, error) {
-	vitamin := &model.Vitamin{
-		VitaminID:   fmt.Sprintf("T%d", 123),
-		VitaminType: input.VitaminType,
-		Benefits:    input.Benefits,
-	}
-
-	r.vitamins = append(r.vitamins, vitamin)
-	return vitamin, nil
-}
-
-func (r *queryResolver) Vitamins(ctx context.Context) ([]*model.Vitamin, error) {
-	query := fmt.Sprintf("SELECT VitaminID, VitaminType, Benefits FROM vitamin")
-	context, cancel := context.WithTimeout(context.Background(), 8000*time.Millisecond)
-	defer cancel()
-	results, err := database.DbConn.QueryContext(context, query)
+	err := vitamin.AddVitamin(input)
 	if err != nil {
 		return nil, err
 	}
-	defer results.Close()
+	return nil, nil
+}
 
-	vitamins := make([]*model.Vitamin, 0)
-	for results.Next() {
-		var vitamin model.Vitamin
-		results.Scan(&vitamin.VitaminID, &vitamin.VitaminType, &vitamin.Benefits)
-
-		vitamins = append(vitamins, &vitamin)
+func (r *queryResolver) Vitamins(ctx context.Context) ([]*model.Vitamin, error) {
+	vitamins, err := vitamin.GetVitaminList()
+	if err != nil {
+		return nil, err
 	}
 	return vitamins, nil
 }

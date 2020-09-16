@@ -2,6 +2,7 @@ package vitamin
 
 import (
 	"VitaminApp/database"
+	"VitaminApp/graph/model"
 	"context"
 	"database/sql"
 	"fmt"
@@ -14,7 +15,7 @@ type Vitamin struct {
 	Benefits    string
 }
 
-func getVitaminList() ([]Vitamin, error) {
+func GetVitaminList() ([]*model.Vitamin, error) {
 	query := fmt.Sprintf("SELECT VitaminID, VitaminType, Benefits FROM vitamin")
 	context, cancel := context.WithTimeout(context.Background(), 8000*time.Millisecond)
 	defer cancel()
@@ -24,12 +25,12 @@ func getVitaminList() ([]Vitamin, error) {
 	}
 	defer results.Close()
 
-	vitamins := make([]Vitamin, 0)
+	vitamins := make([]*model.Vitamin, 0)
 	for results.Next() {
-		var vitamin Vitamin
-		results.Scan(&vitamin.VitaminId, &vitamin.VitaminType, &vitamin.Benefits)
+		var vitamin model.Vitamin
+		results.Scan(&vitamin.VitaminID, &vitamin.VitaminID, &vitamin.Benefits)
 
-		vitamins = append(vitamins, vitamin)
+		vitamins = append(vitamins, &vitamin)
 	}
 
 	return vitamins, nil
@@ -48,7 +49,7 @@ func getVitaminById(vitaminId int) (*Vitamin, error) {
 	return vitamin, nil
 }
 
-func addVitamin(vitamin Vitamin) error {
+func AddVitamin(vitamin model.NewVitamin) error {
 	command := fmt.Sprintf("INSERT INTO Vitamin (VitaminType, Benefits) VALUES ('%s', '%s')", vitamin.VitaminType, vitamin.Benefits)
 	_, err := database.DbConn.Exec(command)
 	fmt.Println(command)
