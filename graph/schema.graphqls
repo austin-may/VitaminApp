@@ -1,0 +1,18 @@
+type Vitamin {
+  VitaminId: ID!
+  VitaminType: String!
+  Benefits: String!
+}
+
+type Query {
+  vitamins: [Vitamin!]!
+}
+
+input NewVitamin {
+  VitaminType: String!
+  Benefits: String!
+}
+
+type Mutation {
+  createVitamin(input:NewVitamin!): Vitamin!
+}
