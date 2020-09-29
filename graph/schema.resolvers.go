@@ -4,51 +4,57 @@ package graph
 // will be copied through when generating and any unknown code will be moved to the end.
 
 import (
-	"VitaminApp/database"
 	"VitaminApp/graph/generated"
 	"VitaminApp/graph/model"
+	"VitaminApp/vitamin"
 	"context"
-	"fmt"
-	"time"
 )
 
 func (r *mutationResolver) CreateVitamin(ctx context.Context, input model.NewVitamin) (*model.Vitamin, error) {
-	vitamin := &model.Vitamin{
-		VitaminID:   fmt.Sprintf("T%d", 123),
-		VitaminType: input.VitaminType,
-		Benefits:    input.Benefits,
-	}
-
-	r.vitamins = append(r.vitamins, vitamin)
-	return vitamin, nil
-}
-
-func (r *queryResolver) Vitamins(ctx context.Context) ([]*model.Vitamin, error) {
-	query := fmt.Sprintf("SELECT VitaminID, VitaminType, Benefits FROM vitamin")
-	context, cancel := context.WithTimeout(context.Background(), 8000*time.Millisecond)
-	defer cancel()
-	results, err := database.DbConn.QueryContext(context, query)
+	err := vitamin.AddVitamin(input)
 	if err != nil {
 		return nil, err
 	}
-	defer results.Close()
+	return nil, nil
+}
 
-	vitamins := make([]*model.Vitamin, 0)
-	for results.Next() {
-		var vitamin model.Vitamin
-		results.Scan(&vitamin.VitaminID, &vitamin.VitaminType, &vitamin.Benefits)
+func (r *mutationResolver) UpdateVitamin(ctx context.Context, input model.UpdatedVitamin) (*model.Vitamin, error) {
+	err := vitamin.UpdateVitamin(input)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
 
-		vitamins = append(vitamins, &vitamin)
+func (r *mutationResolver) DeleteVitamin(ctx context.Context, vitaminID *int) (*model.Vitamin, error) {
+	err := vitamin.DeleteVitamin(*vitaminID)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+func (r *queryResolver) Vitamins(ctx context.Context) ([]*model.Vitamin, error) {
+	vitamins, err := vitamin.GetVitaminList()
+	if err != nil {
+		return nil, err
 	}
 	return vitamins, nil
 }
 
-//Mutation returns generated.MutationResolver implementation.
+func (r *queryResolver) VitaminByID(ctx context.Context, vitaminID *int) (*model.Vitamin, error) {
+	vitamin, err := vitamin.GetVitaminById(*vitaminID)
+	if err != nil {
+		return nil, err
+	}
+	return vitamin, nil
+}
+
+// Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
-
 type queryResolver struct{ *Resolver }
