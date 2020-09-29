@@ -5,7 +5,8 @@ type Vitamin {
 }
 
 type Query {
-  vitamins: [Vitamin!]!
+  vitamins: [Vitamin!]!,
+  vitaminById(vitaminId: Int): Vitamin!
 }
 
 input NewVitamin {
@@ -13,6 +14,14 @@ input NewVitamin {
   Benefits: String!
 }
 
+input UpdatedVitamin {
+  VitaminId: ID!,
+  VitaminType: String!,
+  Benefits: String!
+}
+
 type Mutation {
-  createVitamin(input:NewVitamin!): Vitamin!
+  createVitamin(input:NewVitamin!): Vitamin,
+  updateVitamin(input:UpdatedVitamin!): Vitamin,
+  deleteVitamin(vitaminId: Int): Vitamin
 }
