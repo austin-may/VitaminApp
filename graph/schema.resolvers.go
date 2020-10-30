@@ -4,10 +4,10 @@ package graph
 // will be copied through when generating and any unknown code will be moved to the end.
 
 import (
-	"VitaminApp/graph/generated"
-	"VitaminApp/graph/model"
-	"VitaminApp/vitamin"
 	"context"
+	"my-go-apps/VitaminApp/graph/generated"
+	"my-go-apps/VitaminApp/graph/model"
+	"my-go-apps/VitaminApp/vitamin"
 )
 
 func (r *mutationResolver) CreateVitamin(ctx context.Context, input model.NewVitamin) (*model.Vitamin, error) {

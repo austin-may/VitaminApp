@@ -1,11 +1,11 @@
 package vitamin
 
 import (
-	"VitaminApp/database"
-	"VitaminApp/graph/model"
 	"context"
 	"database/sql"
 	"fmt"
+	"my-go-apps/VitaminApp/database"
+	"my-go-apps/VitaminApp/graph/model"
 	"strconv"
 	"time"
 )

@@ -17,13 +17,5 @@ CREATE TABLE Vitamin
 	PRIMARY KEY (VitaminID)
 )
 
-CREATE TABLE HeartHealth
-(
-	HeartHealthID INT IDENTITY (1,1) ,
-	VitaminID INT NOT NULL,
-	CONSTRAINT PK_HeartHealthID PRIMARY KEY (HeartHealthID),
-	CONSTRAINT FK_HeartHealth_Vitamin_VitaminID FOREIGN KEY (VitaminID) REFERENCES Vitamin(VitaminID)
-)
-
 GO
 

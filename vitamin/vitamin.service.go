@@ -1,10 +1,10 @@
 package vitamin
 
 import (
-	"VitaminApp/cors"
-	"VitaminApp/graph/model"
 	"encoding/json"
 	"io/ioutil"
+	"my-go-apps/VitaminApp/cors"
+	"my-go-apps/VitaminApp/graph/model"
 	"net/http"
 	"strconv"
 	"strings"
