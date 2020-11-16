@@ -12,18 +12,42 @@ GO
 CREATE TABLE Vitamin
 (
 	VitaminID INT IDENTITY (1,1),
-	VitaminType VARCHAR(32),
-	Benefits VARCHAR(MAX)
+	VitaminType VARCHAR(32)
 	PRIMARY KEY (VitaminID)
 )
 
-CREATE TABLE HeartHealth
+GO
+
+CREATE TABLE Benefit
 (
-	HeartHealthID INT IDENTITY (1,1) ,
-	VitaminID INT NOT NULL,
-	CONSTRAINT PK_HeartHealthID PRIMARY KEY (HeartHealthID),
-	CONSTRAINT FK_HeartHealth_Vitamin_VitaminID FOREIGN KEY (VitaminID) REFERENCES Vitamin(VitaminID)
+	BenefitID INT IDENTITY (1,1),
+	VitaminID INT,
+	Benefit VARCHAR(MAX),
+	PRIMARY KEY (BenefitID),
+	FOREIGN KEY (VitaminID) REFERENCES Vitamin(VitaminID),
+
 )
 
 GO
+
+CREATE TABLE Inventory (
+    [ItemID] INT IDENTITY (1,1),
+    [Name] VARCHAR(50),
+    [Count] INT,
+    [Site] VARCHAR(50)
+	PRIMARY KEY ([ItemID])
+)
+
+GO
+
+CREATE TABLE InventoryVitamin
+(
+	InventoryVitaminID INT IDENTITY (1,1),
+	ItemID INT,
+	VitaminID INT,
+	PercentDailyValue INT,
+	PRIMARY KEY (InventoryVitaminID),
+	FOREIGN KEY (ItemID) REFERENCES Inventory(ItemID),
+	FOREIGN KEY (VitaminID) REFERENCES Vitamin(VitaminID)
+)
 

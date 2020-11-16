@@ -7,6 +7,12 @@ type NewVitamin struct {
 	Benefits    string `json:"Benefits"`
 }
 
+type UpdatedVitamin struct {
+	VitaminID   string `json:"VitaminId"`
+	VitaminType string `json:"VitaminType"`
+	Benefits    string `json:"Benefits"`
+}
+
 type Vitamin struct {
 	VitaminID   string `json:"VitaminId"`
 	VitaminType string `json:"VitaminType"`

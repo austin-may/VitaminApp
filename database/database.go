@@ -13,7 +13,7 @@ var DbConn *sql.DB
 
 func SetupDatabase() {
 	var err error
-	connString := fmt.Sprintf("server=localhost;user id=austinmay;database=VitaminDB")
+	connString := fmt.Sprintf("sqlserver://austinmay@localhost/SQLEXPRESS?database=VitaminDB")
 	DbConn, err = sql.Open("sqlserver", connString)
 	if err != nil {
 		log.Fatal("Error creating connection pool: " + err.Error())
