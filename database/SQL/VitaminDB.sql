@@ -31,11 +31,11 @@ CREATE TABLE Benefit
 GO
 
 CREATE TABLE Inventory (
-    [ItemID] INT IDENTITY (1,1),
+    [InventoryID] INT IDENTITY (1,1),
     [Name] VARCHAR(50),
     [Count] INT,
     [Site] VARCHAR(50)
-	PRIMARY KEY ([ItemID])
+	PRIMARY KEY ([InventoryID])
 )
 
 GO
@@ -43,11 +43,11 @@ GO
 CREATE TABLE InventoryVitamin
 (
 	InventoryVitaminID INT IDENTITY (1,1),
-	ItemID INT,
+	InventoryID INT,
 	VitaminID INT,
 	PercentDailyValue INT,
 	PRIMARY KEY (InventoryVitaminID),
-	FOREIGN KEY (ItemID) REFERENCES Inventory(ItemID),
+	FOREIGN KEY (InventoryID) REFERENCES Inventory(InventoryID),
 	FOREIGN KEY (VitaminID) REFERENCES Vitamin(VitaminID)
 )
 

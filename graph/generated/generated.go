@@ -3,10 +3,10 @@
 package generated
 
 import (
-	"VitaminApp/graph/model"
 	"bytes"
 	"context"
 	"errors"
+	"my-go-apps/VitaminApp/graph/model"
 	"strconv"
 	"sync"
 	"sync/atomic"
@@ -15,7 +15,6 @@ import (
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/vektah/gqlparser"
 	"github.com/vektah/gqlparser/ast"
-
 )
 
 // region    ************************** generated!.gotpl **************************
