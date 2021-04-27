@@ -17,7 +17,7 @@ type Vitamin struct {
 }
 
 func GetVitaminList() ([]*model.Vitamin, error) {
-	query := fmt.Sprintf("SELECT VitaminID, VitaminType, Benefits FROM vitamin")
+	query := fmt.Sprintf("SELECT VitaminID, VitaminType FROM vitamin")
 	context, cancel := context.WithTimeout(context.Background(), 8000*time.Millisecond)
 	defer cancel()
 	results, err := database.DbConn.QueryContext(context, query)
@@ -29,7 +29,7 @@ func GetVitaminList() ([]*model.Vitamin, error) {
 	vitamins := make([]*model.Vitamin, 0)
 	for results.Next() {
 		var vitamin model.Vitamin
-		results.Scan(&vitamin.VitaminID, &vitamin.VitaminType, &vitamin.Benefits)
+		results.Scan(&vitamin.VitaminID, &vitamin.VitaminType)
 
 		vitamins = append(vitamins, &vitamin)
 	}
