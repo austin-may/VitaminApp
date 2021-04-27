@@ -34,7 +34,10 @@ CREATE TABLE Inventory (
     [InventoryID] INT IDENTITY (1,1),
     [Name] VARCHAR(50),
     [Count] INT,
-    [Site] VARCHAR(50)
+	[Price] DECIMAL,
+	[ExpirationDate] DATETIME2,
+    [Site] VARCHAR(50),
+	[SKUNumber] VARCHAR(50)
 	PRIMARY KEY ([InventoryID])
 )
 
