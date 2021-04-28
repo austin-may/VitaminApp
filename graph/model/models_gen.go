@@ -7,6 +7,11 @@ type NewVitamin struct {
 	Benefits    string `json:"Benefits"`
 }
 
+type SuppliedVitamin struct {
+	InventoryID    string            `json:"InventoryId"`
+	VitaminContent []*VitaminContent `json:"VitaminContent"`
+}
+
 type UpdatedVitamin struct {
 	VitaminID   string `json:"VitaminId"`
 	VitaminType string `json:"VitaminType"`
@@ -17,4 +22,9 @@ type Vitamin struct {
 	VitaminID   string `json:"VitaminId"`
 	VitaminType string `json:"VitaminType"`
 	Benefits    string `json:"Benefits"`
+}
+
+type VitaminContent struct {
+	VitaminID         string `json:"VitaminId"`
+	PercentDailyValue int    `json:"PercentDailyValue"`
 }

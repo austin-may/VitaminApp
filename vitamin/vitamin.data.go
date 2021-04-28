@@ -60,6 +60,19 @@ func AddVitamin(vitamin model.NewVitamin) error {
 	return nil
 }
 
+func SupplyVitamin(vitamin model.SuppliedVitamin) (error) {
+	for _, v := range vitamin.VitaminContent {
+		command := fmt.Sprintf("INSERT INTO InventoryVitamin (InventoryID, VitaminID, PercentDailyValue) VALUES (%d, %d, %d)", vitamin.InventoryID, v.VitaminID, v.PercentDailyValue)
+		_, err := database.DbConn.Exec(command)
+		fmt.Println(command)
+		if err != nil {
+			return err
+		}
+	}
+	
+	return nil
+}
+
 func UpdateVitamin(vitamin model.UpdatedVitamin) error {
 	vitaminId, err := strconv.Atoi(vitamin.VitaminID)
 	if err != nil {

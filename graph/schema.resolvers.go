@@ -34,6 +34,14 @@ func (r *mutationResolver) DeleteVitamin(ctx context.Context, vitaminID *int) (*
 	return nil, nil
 }
 
+func (r *mutationResolver) SupplyVitamin(ctx context.Context, input model.SuppliedVitamin) (*int, error) {
+	err := vitamin.SupplyVitamin(input)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
 func (r *queryResolver) Vitamins(ctx context.Context) ([]*model.Vitamin, error) {
 	vitamins, err := vitamin.GetVitaminList()
 	if err != nil {
