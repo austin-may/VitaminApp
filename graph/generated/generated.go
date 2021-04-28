@@ -13,7 +13,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/vektah/gqlparser"
+	gqlparser "github.com/vektah/gqlparser"
 	"github.com/vektah/gqlparser/ast"
 )
 
@@ -46,6 +46,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		CreateVitamin func(childComplexity int, input model.NewVitamin) int
 		DeleteVitamin func(childComplexity int, vitaminID *int) int
+		SupplyVitamin func(childComplexity int, input model.SuppliedVitamin) int
 		UpdateVitamin func(childComplexity int, input model.UpdatedVitamin) int
 	}
 
@@ -65,6 +66,7 @@ type MutationResolver interface {
 	CreateVitamin(ctx context.Context, input model.NewVitamin) (*model.Vitamin, error)
 	UpdateVitamin(ctx context.Context, input model.UpdatedVitamin) (*model.Vitamin, error)
 	DeleteVitamin(ctx context.Context, vitaminID *int) (*model.Vitamin, error)
+	SupplyVitamin(ctx context.Context, input model.SuppliedVitamin) (*int, error)
 }
 type QueryResolver interface {
 	Vitamins(ctx context.Context) ([]*model.Vitamin, error)
@@ -109,6 +111,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteVitamin(childComplexity, args["vitaminId"].(*int)), true
+
+	case "Mutation.supplyVitamin":
+		if e.complexity.Mutation.SupplyVitamin == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_supplyVitamin_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SupplyVitamin(childComplexity, args["input"].(model.SuppliedVitamin)), true
 
 	case "Mutation.updateVitamin":
 		if e.complexity.Mutation.UpdateVitamin == nil {
@@ -248,10 +262,21 @@ input UpdatedVitamin {
   Benefits: String!
 }
 
+input SuppliedVitamin {
+  InventoryId: ID!,
+  VitaminContent: [VitaminContent]!
+}
+
+input VitaminContent {
+  VitaminId: ID!,
+  PercentDailyValue: Int!
+}
+
 type Mutation {
   createVitamin(input:NewVitamin!): Vitamin,
   updateVitamin(input:UpdatedVitamin!): Vitamin,
-  deleteVitamin(vitaminId: Int): Vitamin
+  deleteVitamin(vitaminId: Int): Vitamin,
+  supplyVitamin(input: SuppliedVitamin!): Int
 }
 `, BuiltIn: false},
 }
@@ -267,7 +292,7 @@ func (ec *executionContext) field_Mutation_createVitamin_args(ctx context.Contex
 	var arg0 model.NewVitamin
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewVitamin2VitaminAppᚋgraphᚋmodelᚐNewVitamin(ctx, tmp)
+		arg0, err = ec.unmarshalNNewVitamin2myᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐNewVitamin(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -291,13 +316,28 @@ func (ec *executionContext) field_Mutation_deleteVitamin_args(ctx context.Contex
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_supplyVitamin_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.SuppliedVitamin
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNSuppliedVitamin2myᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐSuppliedVitamin(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateVitamin_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 model.UpdatedVitamin
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdatedVitamin2VitaminAppᚋgraphᚋmodelᚐUpdatedVitamin(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdatedVitamin2myᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐUpdatedVitamin(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -410,7 +450,7 @@ func (ec *executionContext) _Mutation_createVitamin(ctx context.Context, field g
 	}
 	res := resTmp.(*model.Vitamin)
 	fc.Result = res
-	return ec.marshalOVitamin2ᚖVitaminAppᚋgraphᚋmodelᚐVitamin(ctx, field.Selections, res)
+	return ec.marshalOVitamin2ᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitamin(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateVitamin(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -449,7 +489,7 @@ func (ec *executionContext) _Mutation_updateVitamin(ctx context.Context, field g
 	}
 	res := resTmp.(*model.Vitamin)
 	fc.Result = res
-	return ec.marshalOVitamin2ᚖVitaminAppᚋgraphᚋmodelᚐVitamin(ctx, field.Selections, res)
+	return ec.marshalOVitamin2ᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitamin(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_deleteVitamin(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -488,7 +528,46 @@ func (ec *executionContext) _Mutation_deleteVitamin(ctx context.Context, field g
 	}
 	res := resTmp.(*model.Vitamin)
 	fc.Result = res
-	return ec.marshalOVitamin2ᚖVitaminAppᚋgraphᚋmodelᚐVitamin(ctx, field.Selections, res)
+	return ec.marshalOVitamin2ᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitamin(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_supplyVitamin(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_supplyVitamin_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SupplyVitamin(rctx, args["input"].(model.SuppliedVitamin))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_vitamins(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -523,7 +602,7 @@ func (ec *executionContext) _Query_vitamins(ctx context.Context, field graphql.C
 	}
 	res := resTmp.([]*model.Vitamin)
 	fc.Result = res
-	return ec.marshalNVitamin2ᚕᚖVitaminAppᚋgraphᚋmodelᚐVitaminᚄ(ctx, field.Selections, res)
+	return ec.marshalNVitamin2ᚕᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitaminᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_vitaminById(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -565,7 +644,7 @@ func (ec *executionContext) _Query_vitaminById(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.Vitamin)
 	fc.Result = res
-	return ec.marshalNVitamin2ᚖVitaminAppᚋgraphᚋmodelᚐVitamin(ctx, field.Selections, res)
+	return ec.marshalNVitamin2ᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitamin(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1859,6 +1938,34 @@ func (ec *executionContext) unmarshalInputNewVitamin(ctx context.Context, obj in
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputSuppliedVitamin(ctx context.Context, obj interface{}) (model.SuppliedVitamin, error) {
+	var it model.SuppliedVitamin
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "InventoryId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("InventoryId"))
+			it.InventoryID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "VitaminContent":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("VitaminContent"))
+			it.VitaminContent, err = ec.unmarshalNVitaminContent2ᚕᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitaminContent(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdatedVitamin(ctx context.Context, obj interface{}) (model.UpdatedVitamin, error) {
 	var it model.UpdatedVitamin
 	var asMap = obj.(map[string]interface{})
@@ -1886,6 +1993,34 @@ func (ec *executionContext) unmarshalInputUpdatedVitamin(ctx context.Context, ob
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Benefits"))
 			it.Benefits, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputVitaminContent(ctx context.Context, obj interface{}) (model.VitaminContent, error) {
+	var it model.VitaminContent
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "VitaminId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("VitaminId"))
+			it.VitaminID, err = ec.unmarshalNID2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "PercentDailyValue":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("PercentDailyValue"))
+			it.PercentDailyValue, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -1924,6 +2059,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_updateVitamin(ctx, field)
 		case "deleteVitamin":
 			out.Values[i] = ec._Mutation_deleteVitamin(ctx, field)
+		case "supplyVitamin":
+			out.Values[i] = ec._Mutation_supplyVitamin(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2305,7 +2442,22 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 	return res
 }
 
-func (ec *executionContext) unmarshalNNewVitamin2VitaminAppᚋgraphᚋmodelᚐNewVitamin(ctx context.Context, v interface{}) (model.NewVitamin, error) {
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNNewVitamin2myᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐNewVitamin(ctx context.Context, v interface{}) (model.NewVitamin, error) {
 	res, err := ec.unmarshalInputNewVitamin(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -2325,16 +2477,21 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) unmarshalNUpdatedVitamin2VitaminAppᚋgraphᚋmodelᚐUpdatedVitamin(ctx context.Context, v interface{}) (model.UpdatedVitamin, error) {
+func (ec *executionContext) unmarshalNSuppliedVitamin2myᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐSuppliedVitamin(ctx context.Context, v interface{}) (model.SuppliedVitamin, error) {
+	res, err := ec.unmarshalInputSuppliedVitamin(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdatedVitamin2myᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐUpdatedVitamin(ctx context.Context, v interface{}) (model.UpdatedVitamin, error) {
 	res, err := ec.unmarshalInputUpdatedVitamin(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNVitamin2VitaminAppᚋgraphᚋmodelᚐVitamin(ctx context.Context, sel ast.SelectionSet, v model.Vitamin) graphql.Marshaler {
+func (ec *executionContext) marshalNVitamin2myᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitamin(ctx context.Context, sel ast.SelectionSet, v model.Vitamin) graphql.Marshaler {
 	return ec._Vitamin(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNVitamin2ᚕᚖVitaminAppᚋgraphᚋmodelᚐVitaminᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Vitamin) graphql.Marshaler {
+func (ec *executionContext) marshalNVitamin2ᚕᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitaminᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Vitamin) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -2358,7 +2515,7 @@ func (ec *executionContext) marshalNVitamin2ᚕᚖVitaminAppᚋgraphᚋmodelᚐV
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNVitamin2ᚖVitaminAppᚋgraphᚋmodelᚐVitamin(ctx, sel, v[i])
+			ret[i] = ec.marshalNVitamin2ᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitamin(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -2371,7 +2528,7 @@ func (ec *executionContext) marshalNVitamin2ᚕᚖVitaminAppᚋgraphᚋmodelᚐV
 	return ret
 }
 
-func (ec *executionContext) marshalNVitamin2ᚖVitaminAppᚋgraphᚋmodelᚐVitamin(ctx context.Context, sel ast.SelectionSet, v *model.Vitamin) graphql.Marshaler {
+func (ec *executionContext) marshalNVitamin2ᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitamin(ctx context.Context, sel ast.SelectionSet, v *model.Vitamin) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -2379,6 +2536,27 @@ func (ec *executionContext) marshalNVitamin2ᚖVitaminAppᚋgraphᚋmodelᚐVita
 		return graphql.Null
 	}
 	return ec._Vitamin(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNVitaminContent2ᚕᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitaminContent(ctx context.Context, v interface{}) ([]*model.VitaminContent, error) {
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]*model.VitaminContent, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalOVitaminContent2ᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitaminContent(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {
@@ -2673,11 +2851,19 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return graphql.MarshalString(*v)
 }
 
-func (ec *executionContext) marshalOVitamin2ᚖVitaminAppᚋgraphᚋmodelᚐVitamin(ctx context.Context, sel ast.SelectionSet, v *model.Vitamin) graphql.Marshaler {
+func (ec *executionContext) marshalOVitamin2ᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitamin(ctx context.Context, sel ast.SelectionSet, v *model.Vitamin) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Vitamin(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOVitaminContent2ᚖmyᚑgoᚑappsᚋVitaminAppᚋgraphᚋmodelᚐVitaminContent(ctx context.Context, v interface{}) (*model.VitaminContent, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputVitaminContent(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

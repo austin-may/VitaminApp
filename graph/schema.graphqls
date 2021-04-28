@@ -20,8 +20,19 @@ input UpdatedVitamin {
   Benefits: String!
 }
 
+input SuppliedVitamin {
+  InventoryId: ID!,
+  VitaminContent: [VitaminContent]!
+}
+
+input VitaminContent {
+  VitaminId: ID!,
+  PercentDailyValue: Int!
+}
+
 type Mutation {
   createVitamin(input:NewVitamin!): Vitamin,
   updateVitamin(input:UpdatedVitamin!): Vitamin,
-  deleteVitamin(vitaminId: Int): Vitamin
+  deleteVitamin(vitaminId: Int): Vitamin,
+  supplyVitamin(input: SuppliedVitamin!): Int
 }
