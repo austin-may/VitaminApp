@@ -62,7 +62,9 @@ func AddVitamin(vitamin model.NewVitamin) error {
 
 func SupplyVitamin(vitamin model.SuppliedVitamin) (error) {
 	for _, v := range vitamin.VitaminContent {
-		command := fmt.Sprintf("INSERT INTO InventoryVitamin (InventoryID, VitaminID, PercentDailyValue) VALUES (%d, %d, %d)", vitamin.InventoryID, v.VitaminID, v.PercentDailyValue)
+		inventoryID, _ := strconv.Atoi(vitamin.InventoryID)
+		vitaminID, _ := strconv.Atoi(v.VitaminID)
+		command := fmt.Sprintf("INSERT INTO InventoryVitamin (InventoryID, VitaminID, PercentDailyValue) VALUES (%d, %d, %d)", inventoryID, vitaminID, v.PercentDailyValue)
 		_, err := database.DbConn.Exec(command)
 		fmt.Println(command)
 		if err != nil {
